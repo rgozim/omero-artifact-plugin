@@ -53,6 +53,10 @@ gradlePlugin {
             id = "org.openmicroscopy.plugin-publishing"
             implementationClass = "org.openmicroscopy.PluginPublishingPlugin"
         }
+        register("omero-plugin") {
+            id = "org.openmicroscopy.omero"
+            implementationClass = "org.openmicroscopy.OmeroPlugin"
+        }
     }
 }
 
