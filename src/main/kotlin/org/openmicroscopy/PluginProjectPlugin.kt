@@ -6,6 +6,7 @@ import org.gradle.kotlin.dsl.apply
 
 class PluginProjectPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
+        apply<FunctionalTestPlugin>()
         apply<AdditionalArtifactsPlugin>()
         apply<PluginPublishingPlugin>()
     }

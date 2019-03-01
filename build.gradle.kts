@@ -53,10 +53,6 @@ gradlePlugin {
             id = "org.openmicroscopy.plugin-publishing"
             implementationClass = "org.openmicroscopy.PluginPublishingPlugin"
         }
-        register("core-plugin") {
-            id = "org.openmicroscopy.core"
-            implementationClass = "org.openmicroscopy.CorePlugin"
-        }
     }
 }
 
