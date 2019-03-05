@@ -3,10 +3,13 @@ package org.openmicroscopy
 import groovy.lang.GroovyObject
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.internal.impldep.org.apache.maven.Maven
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.delegateClosureOf
@@ -18,6 +21,7 @@ import org.jfrog.gradle.plugin.artifactory.dsl.ArtifactoryPluginConvention
 import org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig
 import org.openmicroscopy.PluginHelper.Companion.licenseGnu2
 import org.openmicroscopy.PluginHelper.Companion.resolveProperty
+import java.net.URI
 
 class PluginPublishingPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
@@ -37,6 +41,17 @@ class PluginPublishingPlugin : Plugin<Project> {
     fun Project.configurePluginMaven() {
         afterEvaluate {
             configure<PublishingExtension> {
+                repositories {
+                    maven {
+                        name = "remote"
+                        url = URI(resolveProperty("ARTIFACTORY_URL", "artifactoryUrl"))
+                        credentials {
+                            username = resolveProperty("ARTIFACTORY_USER", "artifactoryUser")
+                            password = resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword")
+                        }
+                    }
+                }
+
                 // pluginMaven is task created by MavenPluginPublishPlugin
                 publications.getByName<MavenPublication>("pluginMaven") {
                     artifact(tasks.getByName("sourcesJar"))

@@ -20,6 +20,7 @@ import org.jfrog.gradle.plugin.artifactory.dsl.ArtifactoryPluginConvention
 import org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig
 import org.openmicroscopy.PluginHelper.Companion.getRuntimeClasspathConfiguration
 import org.openmicroscopy.PluginHelper.Companion.licenseGnu2
+import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 import org.gradle.kotlin.dsl.*
@@ -74,6 +75,17 @@ class PublishingPlugin : Plugin<Project> {
     private
     fun Project.configurePublishingExtension() {
         configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "remote"
+                    url = URI(resolveProperty("ARTIFACTORY_URL", "artifactoryUrl"))
+                    credentials {
+                        username = resolveProperty("ARTIFACTORY_USER", "artifactoryUser")
+                        password = resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword")
+                    }
+                }
+            }
+
             publications {
                 create<MavenPublication>(camelCaseName()) {
                     plugins.withType<JavaPlugin> {
