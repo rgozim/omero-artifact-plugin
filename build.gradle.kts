@@ -1,6 +1,7 @@
 import groovy.lang.GroovyObject
 import org.jfrog.gradle.plugin.artifactory.dsl.ArtifactoryPluginConvention
 import org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig
+import java.net.URI
 
 plugins {
     `kotlin-dsl`
@@ -82,6 +83,19 @@ configure<ArtifactoryPluginConvention> {
             setProperty("password", resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword"))
         })
     })
+}
+
+configure<PublishingExtension> {
+    repositories {
+        maven {
+            name = "remote"
+            url = URI(resolveProperty("ARTIFACTORY_URL", "artifactoryUrl"))
+            credentials {
+                username = resolveProperty("ARTIFACTORY_USER", "artifactoryUser")
+                password = resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword")
+            }
+        }
+    }
 }
 
 project.afterEvaluate {
