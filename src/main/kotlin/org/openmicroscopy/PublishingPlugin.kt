@@ -15,9 +15,13 @@ import org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin
 import org.jfrog.gradle.plugin.artifactory.dsl.ArtifactoryPluginConvention
 import org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig
 import org.openmicroscopy.PluginHelper.Companion.camelCaseName
+import org.openmicroscopy.PluginHelper.Companion.createArtifactoryMavenRepo
+import org.openmicroscopy.PluginHelper.Companion.createGitlabMavenRepo
+import org.openmicroscopy.PluginHelper.Companion.createStandardMavenRepo
 import org.openmicroscopy.PluginHelper.Companion.getRuntimeClasspathConfiguration
 import org.openmicroscopy.PluginHelper.Companion.licenseGnu2
 import org.openmicroscopy.PluginHelper.Companion.resolveProperty
+import org.openmicroscopy.PluginHelper.Companion.safeAdd
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.set
@@ -34,7 +38,7 @@ class PublishingPlugin : Plugin<Project> {
     private
     fun Project.applyPublishingPlugin() {
         apply<MavenPublishPlugin>()
-        // apply<ArtifactoryPlugin>()
+        apply<ArtifactoryPlugin>()
     }
 
     // ORIGINAL
@@ -71,9 +75,9 @@ class PublishingPlugin : Plugin<Project> {
     fun Project.configurePublishingExtension() {
         configure<PublishingExtension> {
             repositories {
-                //artifactoryMavenRepo()
-                //gitlabMavenRepo()
-                //standardMavenRepo()
+                safeAdd(createArtifactoryMavenRepo())
+                safeAdd(createGitlabMavenRepo())
+                safeAdd(createStandardMavenRepo())
             }
 
             publications {

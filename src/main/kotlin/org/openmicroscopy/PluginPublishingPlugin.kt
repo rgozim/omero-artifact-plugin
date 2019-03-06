@@ -14,8 +14,10 @@ import org.jfrog.gradle.plugin.artifactory.dsl.ArtifactoryPluginConvention
 import org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig
 import org.openmicroscopy.PluginHelper.Companion.createArtifactoryMavenRepo
 import org.openmicroscopy.PluginHelper.Companion.createGitlabMavenRepo
+import org.openmicroscopy.PluginHelper.Companion.createStandardMavenRepo
 import org.openmicroscopy.PluginHelper.Companion.licenseGnu2
 import org.openmicroscopy.PluginHelper.Companion.resolveProperty
+import org.openmicroscopy.PluginHelper.Companion.safeAdd
 
 
 class PluginPublishingPlugin : Plugin<Project> {
@@ -28,7 +30,7 @@ class PluginPublishingPlugin : Plugin<Project> {
     private
     fun Project.applyJavaGradlePlugin() {
         apply<MavenPublishPlugin>()
-        // apply<ArtifactoryPlugin>()
+        apply<ArtifactoryPlugin>()
         apply<JavaGradlePluginPlugin>()
     }
 
@@ -37,8 +39,9 @@ class PluginPublishingPlugin : Plugin<Project> {
         afterEvaluate {
             configure<PublishingExtension> {
                 repositories {
-                    createGitlabMavenRepo(this@afterEvaluate)
-                    createArtifactoryMavenRepo(this@afterEvaluate)
+                    safeAdd(createArtifactoryMavenRepo())
+                    safeAdd(createGitlabMavenRepo())
+                    safeAdd(createStandardMavenRepo())
                 }
 
                 // pluginMaven is task created by MavenPluginPublishPlugin
