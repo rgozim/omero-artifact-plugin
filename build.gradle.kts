@@ -87,42 +87,7 @@ configure<ArtifactoryPluginConvention> {
 
 configure<PublishingExtension> {
     repositories {
-
-        val artiUrl = resolveProperty("ARTIFACTORY_URL", "artifactoryUrl")
-        if (artiUrl != null) {
-            maven {
-                name = "artifactory"
-                url = URI.create(artiUrl)
-                credentials {
-                    username = resolveProperty("ARTIFACTORY_USER", "artifactoryUser")
-                    password = resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword")
-                }
-            }
-        }
-
-        val gitlabUrl = resolveProperty("GITLAB_URL", "gitlabUrl")
-        if (gitlabUrl != null) {
-            maven {
-                name = "gitlab"
-                url = URI.create(gitlabUrl)
-                credentials(org.gradle.api.credentials.HttpHeaderCredentials::class, Action {
-                    // Token specified by
-                    val jobToken = System.getenv("CI_JOB_TOKEN")
-                    if (jobToken != null) {
-                        name = "Job-Token"
-                        value = jobToken
-                    } else {
-                        name = "Private-Token"
-                        value = resolveProperty("GITLAB_TOKEN", "gitlabToken")
-                    }
-                })
-            }
-        }
-
-        val releasesRepoUrl = resolveProperty("MAVEN_RELEASES_REPO_URL", "mavenReleasesRepoUrl")
-        val snapshotsRepoUrl = resolveProperty("MAVEN_SNAPSHOTS_REPO_URL", "mavenSnapshotsRepoUrl")
-        val chosenUrl =
-                (if (hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl)
+        val chosenUrl = resolveProperty("MAVEN_REPO_URL", "mavenRepoUrl")
         if (chosenUrl != null) {
              maven {
                 url = URI.create(chosenUrl)
@@ -133,7 +98,6 @@ configure<PublishingExtension> {
                 }
             }
         }
-
     }
 }
 
