@@ -2,25 +2,20 @@ package org.openmicroscopy
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.repositories.MavenArtifactRepository
-import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.repositories
-import org.openmicroscopy.PluginHelper.Companion.resolveProperty
+import org.openmicroscopy.PluginHelper.Companion.createArtifactoryMavenRepo
+import org.openmicroscopy.PluginHelper.Companion.createGitlabMavenRepo
+import org.openmicroscopy.PluginHelper.Companion.createStandardMavenRepo
+import org.openmicroscopy.PluginHelper.Companion.safeAdd
 import java.net.URI
 
 class AdditionalRepositoriesPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         repositories {
-            // Add artifactory and maven repositories if defined
-            closureOf<MavenArtifactRepository> {
-                val remoteUrl = resolveProperty("MVN_REPOSITORY_URL", "mvnRepositoryUrl") ?: ""
-                if (remoteUrl.length > 0) {
-                    maven {
-                        name = "maven-remote"
-                        url = URI.create(remoteUrl)
-                    }
-                }
-            }
+            safeAdd(createArtifactoryMavenRepo())
+            safeAdd(createGitlabMavenRepo())
+            safeAdd(createStandardMavenRepo())
+
             maven {
                 name = "ome.maven"
                 url = URI.create("https://artifacts.openmicroscopy.org/artifactory/maven/")
