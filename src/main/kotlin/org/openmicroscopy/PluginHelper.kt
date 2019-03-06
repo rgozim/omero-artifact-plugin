@@ -70,15 +70,15 @@ class PluginHelper {
 
         fun Project.createStandardMavenRepo(): MavenArtifactRepository? {
             val releasesRepoUrl =
-                    URI(resolveProperty("MAVEN_RELEASES_REPO_URL", "mavenReleasesRepoUrl"))
+                    resolveProperty("MAVEN_RELEASES_REPO_URL", "mavenReleasesRepoUrl")
             val snapshotsRepoUrl =
-                    URI(resolveProperty("MAVEN_SNAPSHOTS_REPO_URL", "mavenSnapshotsRepoUrl"))
+                    resolveProperty("MAVEN_SNAPSHOTS_REPO_URL", "mavenSnapshotsRepoUrl")
 
             val chosenUrl =
                     (if (hasProperty("release")) snapshotsRepoUrl else releasesRepoUrl) ?: return null
 
             return repositories.maven {
-                url = chosenUrl
+                url = URI.create(chosenUrl)
                 name = "maven"
                 credentials {
                     username = resolveProperty("MAVEN_USER", "mavenUser")
