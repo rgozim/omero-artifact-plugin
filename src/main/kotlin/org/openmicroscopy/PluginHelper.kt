@@ -13,6 +13,7 @@ import org.gradle.api.publish.maven.MavenPom
 import org.gradle.kotlin.dsl.*
 import java.net.URI
 
+// Note: this should be copied to build.gradle.kts to ensure this plugin can publish itself
 class PluginHelper {
     companion object {
         fun getRuntimeClasspathConfiguration(project: Project): Configuration? =

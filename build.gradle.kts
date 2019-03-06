@@ -87,14 +87,53 @@ configure<ArtifactoryPluginConvention> {
 
 configure<PublishingExtension> {
     repositories {
-        maven {
-            name = "remote"
-            url = URI(resolveProperty("ARTIFACTORY_URL", "artifactoryUrl"))
-            credentials {
-                username = resolveProperty("ARTIFACTORY_USER", "artifactoryUser")
-                password = resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword")
+
+        val artiUrl = resolveProperty("ARTIFACTORY_URL", "artifactoryUrl")
+        if (artiUrl != null) {
+            maven {
+                name = "artifactory"
+                url = URI.create(artiUrl)
+                credentials {
+                    username = resolveProperty("ARTIFACTORY_USER", "artifactoryUser")
+                    password = resolveProperty("ARTIFACTORY_PASSWORD", "artifactoryPassword")
+                }
             }
         }
+
+        val gitlabUrl = resolveProperty("GITLAB_URL", "gitlabUrl")
+        if (gitlabUrl != null) {
+            maven {
+                name = "gitlab"
+                url = URI.create(gitlabUrl)
+                credentials(org.gradle.api.credentials.HttpHeaderCredentials::class, Action {
+                    // Token specified by
+                    val jobToken = System.getenv("CI_JOB_TOKEN")
+                    if (jobToken != null) {
+                        name = "Job-Token"
+                        value = jobToken
+                    } else {
+                        name = "Private-Token"
+                        value = resolveProperty("GITLAB_TOKEN", "gitlabToken")
+                    }
+                })
+            }
+        }
+
+        val releasesRepoUrl = resolveProperty("MAVEN_RELEASES_REPO_URL", "mavenReleasesRepoUrl")
+        val snapshotsRepoUrl = resolveProperty("MAVEN_SNAPSHOTS_REPO_URL", "mavenSnapshotsRepoUrl")
+        val chosenUrl =
+                (if (hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl)
+        if (chosenUrl != null) {
+             maven {
+                url = URI.create(chosenUrl)
+                name = "maven"
+                credentials {
+                    username = resolveProperty("MAVEN_USER", "mavenUser")
+                    password = resolveProperty("MAVEN_PASSWORD", "mavenPassword")
+                }
+            }
+        }
+
     }
 }
 
@@ -108,9 +147,10 @@ project.afterEvaluate {
 }
 
 fun resolveProperty(envVarKey: String, projectPropKey: String): String? {
-    val propValue = System.getenv()[envVarKey]
+    val propValue = System.getenv(envVarKey)
     if (propValue != null) {
         return propValue
     }
-    return findProperty(projectPropKey).toString()
+
+    return findProperty(projectPropKey)?.toString()
 }
