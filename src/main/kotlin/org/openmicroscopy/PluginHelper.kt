@@ -75,7 +75,7 @@ class PluginHelper {
                     resolveProperty("MAVEN_SNAPSHOTS_REPO_URL", "mavenSnapshotsRepoUrl")
 
             val chosenUrl =
-                    (if (hasProperty("release")) snapshotsRepoUrl else releasesRepoUrl) ?: return null
+                    (if (hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl) ?: return null
 
             return repositories.maven {
                 url = URI.create(chosenUrl)
