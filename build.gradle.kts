@@ -33,6 +33,10 @@ dependencies {
 
 gradlePlugin {
     plugins {
+        register("functional-test-plugin") {
+            id = "org.openmicroscopy.functional-test"
+            implementationClass = "org.openmicroscopy.FunctionalTestPlugin"
+        }
         register("project-plugin") {
             id = "org.openmicroscopy.project"
             implementationClass = "org.openmicroscopy.ProjectPlugin"

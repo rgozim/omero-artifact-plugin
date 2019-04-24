@@ -29,5 +29,6 @@ class PluginProjectPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         apply<AdditionalArtifactsPlugin>()
         apply<PluginPublishingPlugin>()
+        apply<FunctionalTestPlugin>()
     }
 }
