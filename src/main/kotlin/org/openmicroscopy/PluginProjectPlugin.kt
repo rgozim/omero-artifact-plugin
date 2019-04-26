@@ -1,0 +1,1 @@
+../../../../../buildSrc/src/main/kotlin/org/openmicroscopy/PluginProjectPlugin.kt

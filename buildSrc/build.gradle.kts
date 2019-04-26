@@ -10,7 +10,7 @@ kotlinDslPluginOptions {
     experimentalWarning.set(false)
 }
 
-configure<JavaPluginConvention> {
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
