@@ -16,14 +16,6 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs(listOf("buildSrc/src/main/kotlin"))
-        }
-    }
-}
-
 repositories {
     jcenter()
 }
