@@ -34,6 +34,8 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPom
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.api.publish.maven.tasks.PublishToMavenLocal
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.jfrog.gradle.plugin.artifactory.ArtifactoryPlugin
@@ -56,8 +58,9 @@ class PublishingPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         applyPublishingPlugin()
         configureManifest()
-        configurePublishingExtension()
         configureArtifactoryExtension()
+        configurePublishingExtension()
+        configurePublishTasks()
     }
 
     private
@@ -106,13 +109,7 @@ class PublishingPlugin : Plugin<Project> {
             }
 
             publications {
-                create<MavenPublication>("${camelCaseName()}Binary") {
-                    plugins.withType<JavaPlugin> {
-                        from(components["java"])
-                    }
-                    pom(standardPom())
-                }
-
+                // Publication meant for development, skips any doc generation
                 create<MavenPublication>("${camelCaseName()}BinaryAndSources") {
                     plugins.withType<JavaPlugin> {
                         from(components["java"])
@@ -121,6 +118,7 @@ class PublishingPlugin : Plugin<Project> {
                     pom(standardPom())
                 }
 
+                // Publication meant for production and includes docs
                 create<MavenPublication>(camelCaseName()) {
                     plugins.withType<JavaPlugin> {
                         from(components["java"])
@@ -132,6 +130,28 @@ class PublishingPlugin : Plugin<Project> {
                     }
                     pom(standardPom())
                 }
+            }
+        }
+    }
+
+    private
+    fun Project.configurePublishTasks() {
+        val publishing = the<PublishingExtension>()
+
+        // ToDo: make this a configurable list from child projects
+        val formalRepos =
+                listOf(publishing.repositories["artifactory"], publishing.repositories["maven"])
+
+        tasks.withType<PublishToMavenRepository>().configureEach {
+            onlyIf {
+                (formalRepos.contains(repository) &&
+                        publication == publishing.publications[camelCaseName()]) ||
+                        (publication == publishing.publications["${camelCaseName()}BinaryAndSources"])
+            }
+        }
+        tasks.withType<PublishToMavenLocal>().configureEach {
+            onlyIf {
+                publication == publishing.publications["${camelCaseName()}BinaryAndSources"]
             }
         }
     }
