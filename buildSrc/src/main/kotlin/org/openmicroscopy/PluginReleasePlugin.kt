@@ -29,7 +29,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.*
 
-class ReleasePlugin : Plugin<Project> {
+class PluginReleasePlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         applyReckonPlugin()
         configureReleasePluginExtension()
@@ -43,13 +43,10 @@ class ReleasePlugin : Plugin<Project> {
     private
     fun Project.configureReleasePluginExtension() {
         configure<ReckonExtension> {
-            scopeFromProp()
-            stageFromProp("alpha", "beta", "rc", "final")
+            // set default to patch, saying as that's what we tend to
+            // work towards first
+            scopeOptions(mapOf("scope" to "patch"))
         }
-
-        // set default to patch, saying as that's what we tend to
-        // work towards first
-        extra["reckon.scope"] = "patch"
 
         // safety checks before releasing
         tasks.named(ReckonPlugin.TAG_TASK).configure {

@@ -12,6 +12,7 @@ kotlinDslPluginOptions {
 }
 
 repositories {
+    mavenLocal()
     jcenter()
 }
 
@@ -23,7 +24,7 @@ java {
 dependencies {
     implementation(kotlin("gradle-plugin"))
     implementation("org.jfrog.buildinfo:build-info-extractor-gradle:4.9.3")
-    implementation("org.ajoberstar.reckon:reckon-gradle:0.11.0")
+    implementation("org.ajoberstar.reckon:reckon-gradle:latest.release")
 
     api(fileTree("$projectDir/buildSrc/build/libs").matching {
         include("*.jar")
@@ -67,7 +68,7 @@ gradlePlugin {
         }
         register("release-plugin") {
             id = "org.openmicroscopy.release"
-            implementationClass = "org.openmicroscopy.ReleasePlugin"
+            implementationClass = "org.openmicroscopy.PluginReleasePlugin"
         }
     }
 }

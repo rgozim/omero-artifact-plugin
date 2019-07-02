@@ -36,14 +36,14 @@ class PluginPublishingPlugin : Plugin<Project> {
 
     private
     fun Project.configurePluginMaven() {
-        afterEvaluate {
-            configure<PublishingExtension> {
-                repositories {
-                    safeAdd(createArtifactoryMavenRepo())
-                    safeAdd(createGitlabMavenRepo())
-                    safeAdd(createStandardMavenRepo())
-                }
+        configure<PublishingExtension> {
+            repositories {
+                safeAdd(createArtifactoryMavenRepo())
+                safeAdd(createGitlabMavenRepo())
+                safeAdd(createStandardMavenRepo())
+            }
 
+            afterEvaluate {
                 // pluginMaven is task created by MavenPluginPublishPlugin
                 publications.getByName<MavenPublication>("pluginMaven") {
                     // Add sources and docs to the publication
