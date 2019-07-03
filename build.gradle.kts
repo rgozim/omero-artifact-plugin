@@ -2,14 +2,12 @@ plugins {
     groovy
     `kotlin-dsl`
     `java-gradle-plugin`
-    id("org.openmicroscopy.plugin-project")
+    id("org.openmicroscopy.additional-artifacts")
+    id("org.openmicroscopy.plugin-publishing")
 }
 
 group = "org.openmicroscopy"
-
-kotlinDslPluginOptions {
-    experimentalWarning.set(false)
-}
+version = "5.5.2-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -22,22 +20,17 @@ java {
 }
 
 dependencies {
-    implementation(kotlin("gradle-plugin"))
-    implementation("org.jfrog.buildinfo:build-info-extractor-gradle:4.9.3")
-    implementation("org.ajoberstar.reckon:reckon-gradle:latest.release")
-
     api(fileTree("$projectDir/buildSrc/build/libs").matching {
         include("*.jar")
     })
+
+    implementation(kotlin("gradle-plugin"))
+    implementation("org.jfrog.buildinfo:build-info-extractor-gradle:4.9.3")
 }
 
 gradlePlugin {
     plugins {
         // Java/Groovy/Kotlin Project plugins
-        register("project-plugin") {
-            id = "org.openmicroscopy.project"
-            implementationClass = "org.openmicroscopy.ProjectPlugin"
-        }
         register("additional-repositories-plugin") {
             id = "org.openmicroscopy.additional-repositories"
             implementationClass = "org.openmicroscopy.AdditionalRepositoriesPlugin"
@@ -52,10 +45,6 @@ gradlePlugin {
         }
 
         // Plugins for gradle plugins
-        register("plugin-project-plugin") {
-            id = "org.openmicroscopy.plugin-project"
-            implementationClass = "org.openmicroscopy.PluginProjectPlugin"
-        }
         register("plugin-publishing-plugin") {
             id = "org.openmicroscopy.plugin-publishing"
             implementationClass = "org.openmicroscopy.PluginPublishingPlugin"
@@ -66,16 +55,12 @@ gradlePlugin {
             id = "org.openmicroscopy.functional-test"
             implementationClass = "org.openmicroscopy.FunctionalTestPlugin"
         }
-        register("release-plugin") {
-            id = "org.openmicroscopy.release"
-            implementationClass = "org.openmicroscopy.PluginReleasePlugin"
-        }
     }
 }
 
 tasks.create("printJars") {
     doLast {
-        configurations.runtimeClasspath.get().forEach() {
+        configurations.runtimeClasspath.get().forEach {
             println(it.name)
         }
     }
