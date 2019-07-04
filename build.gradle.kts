@@ -2,12 +2,16 @@ plugins {
     groovy
     `kotlin-dsl`
     `java-gradle-plugin`
-    id("org.openmicroscopy.additional-artifacts")
-    id("org.openmicroscopy.plugin-publishing")
+    id("additional-artifacts")
+    id("plugin-publishing")
 }
 
 group = "org.openmicroscopy"
 version = "5.5.2-SNAPSHOT"
+
+kotlinDslPluginOptions {
+    experimentalWarning.set(false)
+}
 
 repositories {
     mavenLocal()

@@ -5,13 +5,16 @@ plugins {
 
 group = "org.openmicroscopy"
 
-configure<JavaPluginConvention> {
+kotlinDslPluginOptions {
+    experimentalWarning.set(false)
+}
+
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 repositories {
-    mavenLocal()
     jcenter()
 }
 
@@ -24,15 +27,15 @@ gradlePlugin {
     plugins {
         // Plugins for gradle plugins
         register("additional-artifacts-plugin") {
-            id = "org.openmicroscopy.additional-artifacts"
+            id = "additional-artifacts"
             implementationClass = "org.openmicroscopy.AdditionalArtifactsPlugin"
         }
         register("functional-test-plugin") {
-            id = "org.openmicroscopy.functional-test"
+            id = "functional-test"
             implementationClass = "org.openmicroscopy.FunctionalTestPlugin"
         }
         register("plugin-publishing-plugin") {
-            id = "org.openmicroscopy.plugin-publishing"
+            id = "plugin-publishing"
             implementationClass = "org.openmicroscopy.PluginPublishingPlugin"
         }
     }
