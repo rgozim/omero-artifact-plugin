@@ -34,8 +34,8 @@ gradlePlugin {
             id = "functional-test"
             implementationClass = "org.openmicroscopy.FunctionalTestPlugin"
         }
-        register("plugin-publishing-plugin") {
-            id = "plugin-publishing"
+        register("publishing-plugin") {
+            id = "publishing"
             implementationClass = "org.openmicroscopy.PluginPublishingPlugin"
         }
     }

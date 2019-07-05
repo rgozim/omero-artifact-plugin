@@ -3,7 +3,7 @@ plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
     id("additional-artifacts")
-    id("plugin-publishing")
+    id("publishing")
 }
 
 group = "org.openmicroscopy"
