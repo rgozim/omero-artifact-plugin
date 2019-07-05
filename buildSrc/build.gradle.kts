@@ -28,15 +28,19 @@ gradlePlugin {
         // Plugins for gradle plugins
         register("additional-artifacts-plugin") {
             id = "additional-artifacts"
-            implementationClass = "org.openmicroscopy.AdditionalArtifactsPlugin"
+            implementationClass = "org.openmicroscopy.artifact.AdditionalArtifactsPlugin"
+        }
+        register("additional-repositories-plugin") {
+            id = "additional-repositories"
+            implementationClass = "org.openmicroscopy.artifact.AdditionalRepositoriesPlugin"
         }
         register("functional-test-plugin") {
             id = "functional-test"
-            implementationClass = "org.openmicroscopy.FunctionalTestPlugin"
+            implementationClass = "org.openmicroscopy.artifact.FunctionalTestPlugin"
         }
         register("publishing-plugin") {
             id = "publishing"
-            implementationClass = "org.openmicroscopy.PluginPublishingPlugin"
+            implementationClass = "org.openmicroscopy.artifact.PluginPublishingPlugin"
         }
     }
 }
