@@ -40,7 +40,7 @@ gradlePlugin {
         }
         register("publishing-plugin") {
             id = "publishing"
-            implementationClass = "org.openmicroscopy.artifact.PluginPublishingPlugin"
+            implementationClass = "org.openmicroscopy.artifact.PublishingPlugin"
         }
     }
 }
